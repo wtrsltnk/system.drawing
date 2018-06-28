@@ -51,6 +51,8 @@ public: // Constructors
     // Initializes a new instance of the Bitmap class from a specified resource.
     // System_CAPS_pubmethod	Bitmap(Type, String)
 
+    virtual ~Bitmap();
+
 public: // Methods
     // Creates a copy of the section of this Bitmap defined by Rectangle structure and with a specified PixelFormat enumeration.
     Bitmap *Clone(struct Rectangle rect, Imaging::PixelFormat format);
