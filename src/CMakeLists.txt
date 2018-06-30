@@ -1,6 +1,7 @@
 
 add_library(system.drawing
     Bitmap.cpp
+    Color.cpp
     Image.cpp
     Point.cpp
     PointF.cpp

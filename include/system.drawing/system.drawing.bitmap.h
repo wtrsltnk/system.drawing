@@ -18,13 +18,13 @@ class Bitmap : public Image
 
 public: // Constructors
         // Initializes a new instance of the Bitmap class from the specified existing image.
-    Bitmap(Image *original);
+    Bitmap(Bitmap *original);
 
     // Initializes a new instance of the Bitmap class from the specified existing image, scaled to the specified size.
-    Bitmap(Image *original, int width, int height);
+    Bitmap(Bitmap *original, int width, int height);
 
     // Initializes a new instance of the Bitmap class from the specified existing image, scaled to the specified size.
-    Bitmap(Image *original, struct Size size);
+    Bitmap(Bitmap *original, struct Size size);
 
     // Initializes a new instance of the Bitmap class with the specified size.
     Bitmap(int width, int height);

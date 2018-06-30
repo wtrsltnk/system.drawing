@@ -10,6 +10,8 @@ typedef unsigned char byte;
 
 struct Color
 {
+    // Properties
+
     // Gets the alpha component value of this Color structure.
     byte A;
 
@@ -37,6 +39,16 @@ struct Color
     // Gets the red component value of this Color structure.
     byte R;
 
+    // Gets a system-defined color that has an ARGB value of #FFD3D3D3.
+    static struct Color const &LightGray();
+
+    // Operators
+
+    // Tests whether two specified Color structures are equivalent.
+    bool operator==(struct Color const &color);
+
+    // Tests whether two specified Color structures are different.
+    bool operator!=(struct Color const &color);
 };
 
 } // namespace Drawing

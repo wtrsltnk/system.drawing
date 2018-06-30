@@ -1,4 +1,5 @@
 ﻿#include "stb_image.h"
+#include "stb_image_resize.h"
 #include "stb_image_write.h"
 #include <algorithm>
 #include <cstring>
@@ -14,27 +15,54 @@ using namespace System::Drawing;
 // Constructors
 
 // Initializes a new instance of the Bitmap class from the specified existing image.
-Bitmap::Bitmap(Image *original)
-    : _xDpi(300.0f), _yDpi(300.0f)
-{}
+Bitmap::Bitmap(Bitmap *original)
+    : _flags(0), _xDpi(300.0f), _yDpi(300.0f)
+{
+    int bitsPerPixel = ((int)original->_bitmapData.PixelFormat & 0xff00) >> 8;
+    int bytesPerPixel = (bitsPerPixel + 7) / 8;
+
+    auto dataSize = original->_bitmapData.Height * original->_bitmapData.Stride * bytesPerPixel;
+    _bitmapData.Height = original->_bitmapData.Height;
+    _bitmapData.PixelFormat = original->_bitmapData.PixelFormat;
+    _bitmapData.Reserved = 0;
+    _bitmapData.Scan0 = new byte[dataSize];
+    std::memcpy(_bitmapData.Scan0, original->_bitmapData.Scan0, dataSize);
+    _bitmapData.Stride = original->_bitmapData.Stride;
+    _bitmapData.Width = original->_bitmapData.Width;
+}
 
 // Initializes a new instance of the Bitmap class from the specified existing image, scaled to the specified size.
-Bitmap::Bitmap(Image *original, int width, int height)
-    : _xDpi(300.0f), _yDpi(300.0f)
-{}
+Bitmap::Bitmap(Bitmap *original, int width, int height)
+    : Bitmap(original)
+{
+    int bitsPerPixel = ((int)_bitmapData.PixelFormat & 0xff00) >> 8;
+    int bytesPerPixel = (bitsPerPixel + 7) / 8;
+
+    byte *output = new byte[width * height * bytesPerPixel];
+    auto result = stbir_resize_uint8(_bitmapData.Scan0, _bitmapData.Width, _bitmapData.Height, _bitmapData.Stride - _bitmapData.Width,
+                                     output, width, height, 0, bytesPerPixel);
+
+    if (result == 1)
+    {
+        _bitmapData.Height = height;
+        _bitmapData.Scan0 = output;
+        _bitmapData.Width = width;
+    }
+}
 
 // Initializes a new instance of the Bitmap class from the specified existing image, scaled to the specified size.
-Bitmap::Bitmap(Image *original, struct Size size)
-    : _xDpi(300.0f), _yDpi(300.0f)
+Bitmap::Bitmap(Bitmap *original, struct Size size)
+    : Bitmap(original, size.Width, size.Height)
 {}
 
 // Initializes a new instance of the Bitmap class with the specified size.
 Bitmap::Bitmap(int width, int height)
-    : _xDpi(300.0f), _yDpi(300.0f)
+    : _flags(0), _xDpi(300.0f), _yDpi(300.0f)
 {
     auto stride = width * 4;
     _bitmapData.Height = height;
     _bitmapData.PixelFormat = Imaging::PixelFormat::Canonical;
+    _bitmapData.Reserved = 0;
     _bitmapData.Scan0 = new byte[height * stride];
     std::memset(_bitmapData.Scan0, 0, height * stride);
     _bitmapData.Stride = stride;
@@ -46,10 +74,11 @@ Bitmap::Bitmap(int width, int height)
 
 // Initializes a new instance of the Bitmap class with the specified size, pixel format, and pixel data.
 Bitmap::Bitmap(int width, int height, int stride, Imaging::PixelFormat format, byte *scan0)
-    : _xDpi(300.0f), _yDpi(300.0f)
+    : _flags(0), _xDpi(300.0f), _yDpi(300.0f)
 {
     _bitmapData.Height = height;
     _bitmapData.PixelFormat = format;
+    _bitmapData.Reserved = 0;
     _bitmapData.Scan0 = new byte[height * stride];
     std::memcpy(_bitmapData.Scan0, scan0, height * stride);
     _bitmapData.Stride = stride;
@@ -58,7 +87,7 @@ Bitmap::Bitmap(int width, int height, int stride, Imaging::PixelFormat format, b
 
 // Initializes a new instance of the Bitmap class with the specified size and format.
 Bitmap::Bitmap(int width, int height, Imaging::PixelFormat format)
-    : _xDpi(300.0f), _yDpi(300.0f)
+    : _flags(0), _xDpi(300.0f), _yDpi(300.0f)
 {
     int bitsPerPixel = ((int)format & 0xff00) >> 8;
     int bytesPerPixel = (bitsPerPixel + 7) / 8;
@@ -66,6 +95,7 @@ Bitmap::Bitmap(int width, int height, Imaging::PixelFormat format)
 
     _bitmapData.Height = height;
     _bitmapData.PixelFormat = format;
+    _bitmapData.Reserved = 0;
     _bitmapData.Scan0 = new byte[height * stride];
     std::memset(_bitmapData.Scan0, 0, height * stride);
     _bitmapData.Stride = stride;
@@ -94,6 +124,7 @@ Bitmap::Bitmap(std::istream &stream, bool useIcm)
 
     _bitmapData.Height = y;
     _bitmapData.PixelFormat = Imaging::PixelFormat::Format32bppArgb;
+    _bitmapData.Reserved = 0;
     _bitmapData.Scan0 = data;
     _bitmapData.Stride = x;
     _bitmapData.Width = x;
@@ -117,6 +148,7 @@ Bitmap::Bitmap(std::string const &filename, bool useIcm)
 
     _bitmapData.Height = y;
     _bitmapData.PixelFormat = Imaging::PixelFormat::Format32bppArgb;
+    _bitmapData.Reserved = 0;
     _bitmapData.Scan0 = data;
     _bitmapData.Stride = x;
     _bitmapData.Width = x;
@@ -266,10 +298,16 @@ Imaging::BitmapData *Bitmap::LockBits(struct Rectangle rect, Imaging::ImageLockM
 }
 
 // Makes the default transparent color transparent for this Bitmap.
-void Bitmap::MakeTransparent() {}
+void Bitmap::MakeTransparent()
+{
+    MakeTransparent(Color::LightGray());
+}
 
 // Makes the specified color transparent for this Bitmap.
-void Bitmap::MakeTransparent(struct Color transparentColor) {}
+void Bitmap::MakeTransparent(struct Color transparentColor)
+{
+    // todo: create new bitmap data in Format32bppArgb and make all pixels with given color transparent (alpha = 0)
+}
 
 // Rotates, flips, or rotates and flips the Image.
 void Bitmap::RotateFlip(RotateFlipType rotateFlipType) {}
@@ -325,7 +363,7 @@ void Bitmap::Save(std::string const &filename)
     {
         Save(filename, Imaging::ImageFormat::Png());
     }
-    if (ext == ".jpg"  || ext == ".jpeg")
+    if (ext == ".jpg" || ext == ".jpeg")
     {
         Save(filename, Imaging::ImageFormat::Jpeg());
     }
@@ -339,7 +377,7 @@ void Bitmap::Save(std::string const &filename)
 void Bitmap::Save(std::string const &filename, Imaging::ImageFormat const &format)
 {
     auto stream = std::ofstream();
-    stream.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+    stream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
     stream.open(filename, std::ios::binary);
 
