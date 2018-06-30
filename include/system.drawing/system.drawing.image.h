@@ -52,7 +52,7 @@ public: // Propeties
     SizeF PhysicalDimension() const;
 
     // Gets the pixel format for this Image.
-    Imaging::PixelFormat PixelFormat();
+    virtual Imaging::PixelFormat PixelFormat() const = 0;
 
     // Gets IDs of the property items stored in this Image.
     // System_CAPS_pubproperty	PropertyIdList

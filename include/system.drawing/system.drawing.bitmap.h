@@ -31,16 +31,16 @@ public: // Constructors
     // System_CAPS_pubmethod Bitmap(Int32, Int32, Graphics)
 
     // Initializes a new instance of the Bitmap class with the specified size, pixel format, and pixel data.
-    Bitmap(int width, int height, int stride, Imaging::PixelFormat format, Imaging::byte *scan0);
+    Bitmap(int width, int height, int stride, Imaging::PixelFormat format, byte *scan0);
 
     // Initializes a new instance of the Bitmap class with the specified size and format.
     Bitmap(int width, int height, Imaging::PixelFormat format);
 
     // Initializes a new instance of the Bitmap class from the specified data stream.
-    Bitmap(std::ostream &stream);
+    Bitmap(std::istream &stream);
 
     // Initializes a new instance of the Bitmap class from the specified data stream.
-    Bitmap(std::ostream &stream, bool useIcm);
+    Bitmap(std::istream &stream, bool useIcm);
 
     // Initializes a new instance of the Bitmap class from the specified file.
     Bitmap(std::string const &filename);
@@ -89,6 +89,9 @@ public: // Methods
 
     // Makes the specified color transparent for this Bitmap.
     void MakeTransparent(struct Color transparentColor);
+
+    // Gets the pixel format for this Image.
+    virtual Imaging::PixelFormat PixelFormat() const;
 
     // Sets the color of the specified pixel in this Bitmap.
     void SetPixel(int x, int y, Color color);

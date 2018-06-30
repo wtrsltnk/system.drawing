@@ -2,12 +2,11 @@
 #define BITMAPDATA_H
 
 #include <system.drawing/Imaging/system.drawing.imaging.pixelformat.h>
+#include "../system.drawing.color.h"
 
 namespace System {
 namespace Drawing {
 namespace Imaging {
-
-typedef unsigned char byte;
 
 class BitmapData
 {

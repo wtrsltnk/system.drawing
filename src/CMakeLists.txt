@@ -2,6 +2,10 @@
 add_library(system.drawing
     Bitmap.cpp
     Image.cpp
+    stb.cpp
+    stb_image.h
+    stb_image_resize.h
+    stb_image_write.h
     )
 
 target_include_directories(system.drawing
