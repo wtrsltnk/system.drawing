@@ -1,6 +1,9 @@
 #ifndef SIZE_H
 #define SIZE_H
 
+#include <system.drawing/system.drawing.point.h>
+#include <system.drawing/system.drawing.sizeF.h>
+
 namespace System {
 namespace Drawing {
 
@@ -20,6 +23,26 @@ struct Size
 
     // Gets or sets the horizontal component of this Size structure.
     int Width;
+
+    // Operators
+
+    // Adds the width and height of one Size structure to the width and height of another Size structure.
+    struct Size operator+(struct Size const &size) const;
+
+    // Tests whether two Size structures are equal.
+    bool operator==(struct Size const &size) const;
+
+    // Converts the specified Size structure to a Point structure.
+    operator Point() const;
+
+    // Converts the specified Size structure to a SizeF structure.
+    operator SizeF() const;
+
+    // Tests whether two Size structures are different.
+    bool operator!=(struct Size const &size) const;
+
+    // Subtracts the width and height of one Size structure from the width and height of another Size structure.
+    struct Size operator-(struct Size const &size) const;
 };
 
 } // namespace Drawing

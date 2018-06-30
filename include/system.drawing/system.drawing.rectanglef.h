@@ -4,13 +4,17 @@
 #include <system.drawing/system.drawing.pointf.h>
 #include <system.drawing/system.drawing.sizef.h>
 
-namespace System
-{
-namespace Drawing
-{
+namespace System {
+namespace Drawing {
 
 struct RectangleF
 {
+    // Initializes a new instance of the RectangleF class with the specified location and size.
+    RectangleF(struct PointF const &point, struct SizeF const &size);
+
+    // Initializes a new instance of the RectangleF class with the specified location and size.
+    RectangleF(float x, float y, float w, float h);
+
     // Gets the y-coordinate that is the sum of Y and Height of this RectangleF structure.
     float Bottom;
 
@@ -43,9 +47,20 @@ struct RectangleF
 
     // Gets or sets the y-coordinate of the upper-left corner of this RectangleF structure.
     float Y;
+
+    // Operators
+
+    // Tests whether two RectangleF structures have equal location and size.
+    bool operator==(struct RectangleF const &rect) const;
+
+    // Converts the specified Rectangle structure to a RectangleF structure.
+    operator struct Rectangle() const;
+
+    // Tests whether two RectangleF structures differ in location or size.
+    bool operator!=(struct RectangleF const &rect);
 };
 
-}   // Drawing
-}   // System
+} // namespace Drawing
+} // namespace System
 
 #endif // RECTANGLEF_H

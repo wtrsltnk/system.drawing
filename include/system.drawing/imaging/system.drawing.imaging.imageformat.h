@@ -9,43 +9,47 @@ namespace Imaging {
 
 class ImageFormat
 {
+    std::string _guid;
+
 public: // Constructors
-    ImageFormat(std::string &guid);
+    ImageFormat(std::string const &guid);
 
 public: // Properties
     // Gets the bitmap (BMP) image format.
-    static ImageFormat *Bmp();
+    static ImageFormat const &Bmp();
 
     // Gets the enhanced metafile (EMF) image format.
-    static ImageFormat *Emf();
+    static ImageFormat const &Emf();
 
     // Gets the Exchangeable Image File (Exif) format.
-    static ImageFormat *Exif();
+    static ImageFormat const &Exif();
 
     // Gets the Graphics Interchange Format (GIF) image format.
-    static ImageFormat *Gif();
+    static ImageFormat const &Gif();
 
     // Gets a Guid structure that represents this ImageFormat object.
-    std::string	const &Guid() const;
+    std::string const &Guid() const;
 
     // Gets the Windows icon image format.
-    static ImageFormat *Icon();
+    static ImageFormat const &Icon();
 
     // Gets the Joint Photographic Experts Group (JPEG) image format.
-    static ImageFormat *Jpeg();
+    static ImageFormat const &Jpeg();
 
     // Gets the format of a bitmap in memory.
-    static ImageFormat *MemoryBmp();
+    static ImageFormat const &MemoryBmp();
 
     // Gets the W3C Portable Network Graphics (PNG) image format.
-    static ImageFormat *Png();
+    static ImageFormat const &Png();
+
+    // Gets the Truevision Graphics Adapter (Tga) image format.
+    static ImageFormat const &Tga();
 
     // Gets the Tagged Image File Format (TIFF) image format.
-    static ImageFormat *Tiff();
+    static ImageFormat const &Tiff();
 
     // Gets the Windows metafile (WMF) image format.
-    static ImageFormat *Wmf();
-
+    static ImageFormat const &Wmf();
 };
 
 } // namespace Imaging

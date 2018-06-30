@@ -2,6 +2,14 @@
 add_library(system.drawing
     Bitmap.cpp
     Image.cpp
+    Point.cpp
+    PointF.cpp
+    Rectangle.cpp
+    RectangleF.cpp
+    Size.cpp
+    SizeF.cpp
+    imaging/BitmapData.cpp
+    imaging/ImageFormat.cpp
     stb.cpp
     stb_image.h
     stb_image_resize.h
@@ -45,9 +53,6 @@ install(
         ${system.drawing_SOURCE_DIR}/include/system.drawing/system.drawing.sizef.h
         ${system.drawing_SOURCE_DIR}/include/system.drawing/imaging/system.drawing.imaging.bitmapdata.h
         ${system.drawing_SOURCE_DIR}/include/system.drawing/imaging/system.drawing.imaging.colorpalette.h
-        ${system.drawing_SOURCE_DIR}/include/system.drawing/imaging/system.drawing.imaging.encoderparameter.h
-        ${system.drawing_SOURCE_DIR}/include/system.drawing/imaging/system.drawing.imaging.encoderparameters.h
-        ${system.drawing_SOURCE_DIR}/include/system.drawing/imaging/system.drawing.imaging.imagecodecinfo.h
         ${system.drawing_SOURCE_DIR}/include/system.drawing/imaging/system.drawing.imaging.imageformat.h
         ${system.drawing_SOURCE_DIR}/include/system.drawing/imaging/system.drawing.imaging.imagelockmode.h
         ${system.drawing_SOURCE_DIR}/include/system.drawing/imaging/system.drawing.imaging.pixelformat.h
